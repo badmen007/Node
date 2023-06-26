@@ -23,4 +23,4 @@
 // 1. 先执行宏任务，执行完毕后清空微任务队列
 // 2. 再执行宏任务，执行完毕后清空微任务队列
 //
-// requestAnimationFrame requestIdleCallback 和浏览器渲染相关的钩子 
+// requestAnimationFrame requestIdleCallback 和浏览器渲染相关的钩子

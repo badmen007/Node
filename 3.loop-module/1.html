@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <button id="button">点我</button>
+    <script>
+      // document.body.style.background = 'red'
+      // console.log(1)
+      // Promise.resolve().then(() => {
+      //   console.log(2)
+      //   document.body.style.background = 'yellow'
+      // })
+      // console.log(3)
+
+      // ------------------------------------------------------
+
+      // 如果是点击了的，那么执行顺序就是 listener1, micro task1, listener2, micro task2
+      // 就是两个宏任务
+      //button.addEventListener("click", () => {
+      //  console.log("listener1");
+      //  Promise.resolve().then(() => console.log("micro task1"));
+      //});
+      //button.addEventListener("click", () => {
+      //  console.log("listener2");
+      //  Promise.resolve().then(() => console.log("micro task2"));
+      //});
+      //button.click(); // listener1 listener2 micro task1 micro task2 直接执行 不是点击了再执行
+
+      //-------------------------------------------------------
+
+      //Promise.resolve().then(() => {
+      //  console.log("Promise1");
+      //  setTimeout(() => {
+      //    console.log("setTimeout2");
+      //  }, 0);
+      //});
+      //setTimeout(() => {
+      //  console.log("setTimeout1");
+      //  Promise.resolve().then(() => {
+      //    console.log("Promise2");
+      //  });
+      //}, 0);
+
+      // 执行顺序 Promise1 setTimeout1 Promise2 setTimeout2
+
+      //-------------------------------------------------------
+
+      //console.log(1);
+      //async function async() {
+      //  console.log(2);
+      //  await console.log(3); // await 后面的代码会放到微任务队列中 yield Promise.resolve(console.log(3)).then(() => console.log(4))
+      //  console.log(4);
+      //}
+      //setTimeout(() => {
+      //  console.log(5);
+      //}, 0);
+      //const promise = new Promise((resolve, reject) => {
+      //  console.log(6);
+      //  resolve(7);
+      //});
+      //async();
+      //console.log(8);
+
+      // 微任务队列[7, 4]
+      // 1, 6, 2, 3, 8, 7, 4, 5 
+
+      //-------------------------------------------------------
+
+      // 一个Promise返回了一个Promise 回去调用这个promise的then方法 走下一个then的成功还是失败
+      // ecmascript 规定如果一个promise返回一个promise 那么promise会再次产生一个任务
+      Promise.resolve().then(() => { // p1
+        console.log(0)
+        // 返回一个promise 这个promise会产生两个微任务 被延迟了两次
+        return new Promise(resolve => {
+          resolve('a')
+        })
+      }).then(res => {
+        console.log(res)
+      })
+
+      Promise.resolve().then(() => { // p2
+        console.log(1)
+      }).then(() => {
+        console.log(2)
+      }).then(() => {
+        console.log(3)
+      }).then(() => {
+        console.log(4)
+      }).then(() => {
+        console.log(5)
+      })
+      // 默认会产生两个微任务 [p1, p2]
+      // 0, 1, 2, 3, 'a', 4, 5
+    </script>
+  </body>
+</html>
