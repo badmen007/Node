@@ -62,3 +62,6 @@ console.log(a)
 // 1. 先通过id来解析出一个绝对路径 拼接括扩展名
 // 2. 读出文件的内容，创造一个沙箱环境执行 vm.compilerFunction Reflect.apply执行 
 // 3. 模块的缓存 通过文件名来缓存
+// 4. this === module.exports
+// ✅ =》exports.a = 100;
+// ❌ => exports = { a: 1 } 用户不能直接改变exports的引用，因为不会导致module.exports的变化
