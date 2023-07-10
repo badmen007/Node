@@ -1,0 +1,7 @@
+{
+  "exec": "xz-server",
+  "watch": ["src/*.*", "bin/www.js"],
+  "ext": "js,json,html,cjs",
+  "delay": "1000",
+  "ignore": ["node_modules/**"]
+}
