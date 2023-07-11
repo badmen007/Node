@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <%dirs.forEach(dir => {%>
-      <li><%=dir%></li>
+    <%dirs.forEach(obj => {%>
+    <li><a href="<%=obj.url%>">大小(<%=obj.size%>)(<%=obj.ctime%>)<%=obj.dir%></a></li>
     <%})%>
   </body>
 </html>
