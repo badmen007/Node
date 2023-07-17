@@ -1,12 +1,12 @@
 const delegate = require("./delegates");
 //创建一个空对象并将其导出
-const proto = (module.exports = {
+const proto = module.exports = {
   onerror(error) {
-    console.error(error);
+    const { res } = this;
     this.status = 500;
-    this.res.end(`Internal Server Error`);
-  },
-});
+    res.end(error.message)
+  }
+}
 //使用代理模块将proto对象的一些属性代理到request对象上  proto.url=>proto.request.url
 delegate(proto, "request")
   .access("method") //将request对象上method属性代理到proto对象上 access能读又能写

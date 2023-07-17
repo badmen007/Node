@@ -31,7 +31,8 @@ class Application {
   }
   handleRequest(ctx, fnMiddleware) {
     const handleResponse = () => respond(ctx);
-    return fnMiddleware(ctx).then(handleResponse);
+    const onerror = err => ctx.onerror(err);
+    return fnMiddleware(ctx).then(handleResponse).catch(err);
   }
   createContext(req, res) {
     const ctx = Object.create(this.context);
