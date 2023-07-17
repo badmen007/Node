@@ -4,6 +4,7 @@ const context = require("./context");
 const request = require("./request");
 const response = require("./response");
 const compose = require("./koa-compose");
+const { Stream } = require("stream");
 
 class Application {
   constructor() {
@@ -32,7 +33,7 @@ class Application {
   handleRequest(ctx, fnMiddleware) {
     const handleResponse = () => respond(ctx);
     const onerror = err => ctx.onerror(err);
-    return fnMiddleware(ctx).then(handleResponse).catch(err);
+    return fnMiddleware(ctx).then(handleResponse).catch(onerror);
   }
   createContext(req, res) {
     const ctx = Object.create(this.context);
@@ -47,9 +48,11 @@ class Application {
 }
 
 function respond(ctx) {
-  let res = ctx.res;
-  let body = ctx.body;
-  return res.end(body);
+  let { res, body } = ctx;
+  if (Buffer.isBuffer(body)) return res.end(body);
+  if (typeof body === 'string') return res.end(body);
+  if (body instanceof Stream) return body.pipe(res)
+  res.end(JSON.stringify(body))
 }
 
 module.exports = Application;
