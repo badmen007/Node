@@ -3,9 +3,9 @@ const app = new Koa();
 const Router = require("koa-router");
 const router = new Router();
 const bodyParser = require("koa-bodyparser");
-const jwt = require("jwt-simple");
+const jwt = require("./jwt-simple");
 
-const secreKey = "secretKey";
+const secretKey = "secretKey";
 app.use(bodyParser());
 
 router.get("/login", async (ctx) => {
@@ -24,7 +24,7 @@ router.post("/login", async (ctx) => {
   const expirationTime = 60 * 60 * 1000;
   const expirationDate = Math.floor(Date.now() / 1000) + expirationTime;
 
-  const token = jwt.encode({ username, exp: expirationDate }, secreKey);
+  const token = jwt.encode({ username, exp: expirationDate }, secretKey);
   ctx.body = { token };
 });
 
@@ -33,11 +33,11 @@ router.get("/user", async (ctx) => {
   if (authorization && authorization.startsWith("Bearer")) {
     let token = authorization.slice(7);
     try {
-      let payload = jwt.decode(token, secreKey);
+      let payload = jwt.decode(token, secretKey);
       ctx.body = payload;
     } catch (error) {
-      ctx.status = "401";
-      ctx.body = "Invalide tolen";
+      ctx.status = 401;
+      ctx.body = "Invalided token";
     }
   }
 });
