@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <input type="text" placeholder="请输入关键字" id='search-word'/>
+    <ul id='sug-list'>
+      
+    </ul>
+    <script>
+      function jsonp({url, jsonp, data }) {
+        return new Promise(resolve => {
+          // 1.准备一个全局的回调函数
+          let callbackName = `jQuery_${Date.now()}`
+          let script = document.createElement('script')
+          // 2.将回调函数挂载到window上
+          window[callbackName] = function (data) {
+            resolve(data)
+          }
+          // 看看有没有问号
+          let query = url.indexOf('?') === -1 ? '?' : '&'
+          for (let key in data) {
+            query += `${key}=${data[key]}&`
+          }
+          script.src = `${url}${query}${jsonp}=${callbackName}` 
+          document.body.appendChild(script)
+        })
+
+      }
+      const searchWord = document.getElementById('search-word')
+      const sugList = document.getElementById('sug-list')
+      searchWord.addEventListener('input', (e) => {
+        const wd = e.target.value
+        jsonp({
+          //url: 'https://www.baidu.com/sugrec',
+          url: 'http://localhost:3000/sugrec',
+          data: {
+            prod: 'pc',
+            wd
+          },
+          jsonp: 'cb'
+        }).then(res => {
+          console.log(res, 'res')
+          let html = ''
+          res.g.forEach(item => {
+            html += `<li>${item.q}</li>`
+          })
+          sugList.innerHTML = html
+        })
+      })
+    </script>
+  </body>
+</html>
