@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <iframe id="bIframe" src="http://localhost:4000/b.html" onload="handleIframeLoaded()"></iframe>
+    <script>
+        window.myName = 'aWindow';
+        function handleIframeLoaded(){
+            //1.获取到4000/b.html它的window
+            const bWindow = document.getElementById('bIframe').contentWindow;
+            //向bWindow发消息
+            bWindow.postMessage({type:'fromA',content:'hello'},'http://localhost:4000');
+        }
+        window.addEventListener('message',(event)=>{
+            console.log('a收到b的消息',event.data);
+        });
+    </script>
+</body>
+</html>
