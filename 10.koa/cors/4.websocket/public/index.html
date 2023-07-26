@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <script>
+      let socket = new WebSocket('ws://localhost:4000')
+      socket.onopen = () => {
+        // 当客户端建立链接后
+        console.log('连接成功')
+        socket.send('hello')
+      }
+      // 当客户端收到服务端的消息后
+      socket.onmessage = (event) => {
+        console.log('收到消息', event.data)
+      }
+    </script>
+  </body>
+</html>
