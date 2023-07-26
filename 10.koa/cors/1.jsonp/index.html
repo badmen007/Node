@@ -36,17 +36,22 @@
       searchWord.addEventListener('input', (e) => {
         const wd = e.target.value
         jsonp({
-          //url: 'https://www.baidu.com/sugrec',
-          url: 'http://localhost:3000/sugrec',
+          url: 'https://www.baidu.com/sugrec',
+          // url: 'http://localhost:3000/sugrec',
           data: {
             prod: 'pc',
             wd
           },
           jsonp: 'cb'
         }).then(res => {
-          console.log(res, 'res')
           let html = ''
+          const value = searchWord.value
           res.g.forEach(item => {
+            console.log(value)
+            if (item.q.includes(value)) {
+              item.q = item.q.replace(value, `<span style="color: red">${value}</span>`)
+              console.log(item.q)
+            }
             html += `<li>${item.q}</li>`
           })
           sugList.innerHTML = html
